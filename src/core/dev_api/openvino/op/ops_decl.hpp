@@ -68,6 +68,7 @@ class TensorIterator;
 class Tile;
 class Unsqueeze;
 class Xor;
+class GroupingOperation;
 }  // namespace ov::op::v0
 
 namespace ov::op::v1 {
