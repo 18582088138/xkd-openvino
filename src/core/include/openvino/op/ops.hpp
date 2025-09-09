@@ -211,3 +211,6 @@
 #include "openvino/op/util/op_types.hpp"
 #include "openvino/op/variadic_split.hpp"
 #include "openvino/op/xor.hpp"
+
+#include "openvino/op/grouping_operation.hpp"
+#include "openvino/op/ball_query.hpp"
