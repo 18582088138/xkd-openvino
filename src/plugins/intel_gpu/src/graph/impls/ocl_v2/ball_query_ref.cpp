@@ -56,7 +56,7 @@ protected:
         const auto& out_shape = params.output_layouts[0].get_shape();
         const size_t B       = out_shape.size() > 0 ? static_cast<size_t>(out_shape[0]) : 1;
         const size_t npoint  = out_shape.size() > 1 ? static_cast<size_t>(out_shape[1]) : 1;
-        const size_t nsample = out_shape.size() > 3 ? static_cast<size_t>(out_shape[2]) : 1;
+        const size_t nsample = out_shape.size() > 2 ? static_cast<size_t>(out_shape[2]) : 1;
 
         // 一维 GWS，匹配 kernel 的 total 线性索引
         const size_t total = B * npoint * nsample;

@@ -66,7 +66,6 @@ REGISTER_FACTORY(v0, TensorIterator);
 REGISTER_FACTORY(v0, Tile);
 REGISTER_FACTORY(v0, Unsqueeze);
 
-REGISTER_FACTORY(v0, GroupingOperation);
 REGISTER_FACTORY(v0, BallQuery);
 
 // ----------------------------- Unsupported v0 ops ----------------------------- //

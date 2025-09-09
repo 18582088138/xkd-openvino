@@ -69,7 +69,6 @@ class Tile;
 class Unsqueeze;
 class Xor;
 
-class GroupingOperation;
 class BallQuery;
 }  // namespace ov::op::v0
 

@@ -167,7 +167,6 @@ REGISTER_IMPLS(tile);
 REGISTER_IMPLS(col2im);
 REGISTER_IMPLS(vl_sdpa);
 
-REGISTER_IMPLS(grouping_operation);
 REGISTER_IMPLS(ball_query);
 
 REGISTER_DEFAULT_IMPLS(assign, CPU_S, CPU_D);

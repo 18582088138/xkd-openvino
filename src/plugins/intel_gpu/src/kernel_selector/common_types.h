@@ -109,8 +109,8 @@ enum class KernelType {
     STFT,
     ISTFT,
     COL2IM,
+
     LORA,
-    GroupingOperation,
     BallQuery,
 };
 

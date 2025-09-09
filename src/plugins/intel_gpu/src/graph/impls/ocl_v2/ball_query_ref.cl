@@ -17,11 +17,6 @@ KERNEL(ball_query_ref)(
     int B = INPUT0_BATCH_NUM;
     int NPOINT = INPUT0_FEATURE_NUM;
     int N = INPUT1_FEATURE_NUM;
-
-    if (get_global_id(0) == 0 && get_global_id(1) == 0 && get_global_id(2) == 0 ){
-            printf("======== [GPU ov ball_query] ======== \n");
-            printf("batch_index: %d, point_index: %d, B: %d, N: %d, NPOINT: %d \n",batch_index, point_index, B, N, NPOINT);
-        }
         
     float radius2 = radius * radius;
     int cnt = 0;

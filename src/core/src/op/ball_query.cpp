@@ -89,7 +89,7 @@ bool BallQuery::evaluate(TensorVector& outputs, const TensorVector& inputs) cons
     // Dispatch to reference implementation
     using namespace element;
     return IF_TYPE_OF(v0_BallQuery_evaluate,
-                      OV_PP_ET_LIST(f32, f16),
+                      OV_PP_ET_LIST(f32, f16, i32, i64),
                       ball_query::Evaluate,
                       new_xyz.get_element_type(),
                       new_xyz,
@@ -104,6 +104,8 @@ bool BallQuery::has_evaluate() const {
     switch (get_input_element_type(0)) {
     case element::f32:
     case element::f16:
+    case element::i32:
+    case element::i64:
         return true;
     default:
         return false;
