@@ -11,6 +11,7 @@
     #include "impls/ocl_v2/furthest_point_sampling_opt.hpp"
     // #include "impls/ocl_v2/furthest_point_sampling_opt_v2.hpp"
     // #include "impls/ocl_v2/furthest_point_sampling_opt_v3.hpp"
+    // #include "impls/ocl_v2/furthest_point_sampling_bfyx_opt.hpp"
 #endif
 
 namespace ov::intel_gpu {
@@ -23,6 +24,7 @@ const std::vector<std::shared_ptr<cldnn::ImplementationManager>>& Registry<furth
         // OV_GPU_CREATE_INSTANCE_OCL(ocl::FurthestPointSamplingOptV2, shape_types::any)
         OV_GPU_CREATE_INSTANCE_OCL(ocl::FurthestPointSamplingOpt, shape_types::any)
         OV_GPU_CREATE_INSTANCE_OCL(ocl::FurthestPointSamplingRef, shape_types::any)
+        // OV_GPU_CREATE_INSTANCE_OCL(ocl::FurthestPointSamplingBfyxOpt, shape_types::any)
     };
     return impls;
 }

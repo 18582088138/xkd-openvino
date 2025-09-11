@@ -149,3 +149,4 @@ _OPENVINO_OP_REG(VariadicSplit, ov::op::v1)
 _OPENVINO_OP_REG(Xor, ov::op::v0)
 
 _OPENVINO_OP_REG(GroupingOperation, ov::op::v0)
+_OPENVINO_OP_REG(FurthestPointSampling, ov::op::v0)
