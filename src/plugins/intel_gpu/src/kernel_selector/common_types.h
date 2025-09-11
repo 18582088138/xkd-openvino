@@ -110,7 +110,7 @@ enum class KernelType {
     ISTFT,
     COL2IM,
     LORA,
-    GroupingOperation
+    GroupingOperation,
     FurthestPointSampling,
 };
 
