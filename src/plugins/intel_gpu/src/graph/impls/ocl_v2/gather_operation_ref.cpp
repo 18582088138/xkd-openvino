@@ -78,7 +78,7 @@ public:
     }
 
     // No internal buffers are required for gather
-    [[nodiscard]] std::vector<BufferDescriptor> get_internal_buffer_descs(const RuntimeParams& /*params*/) const override { return {}; }
+    // [[nodiscard]] std::vector<BufferDescriptor> get_internal_buffer_descs(const RuntimeParams& /*params*/) const override { return {}; }
 };
 
 }  // namespace

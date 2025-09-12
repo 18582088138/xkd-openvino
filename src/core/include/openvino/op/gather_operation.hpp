@@ -13,7 +13,7 @@ public:
 
     GatherOperation() = default;
 
-    GatherOperation(const Output<Node>& xyz, const Output<Node>& npoint);
+    GatherOperation(const Output<Node>& features, const Output<Node>& idx);
 
     bool visit_attributes(AttributeVisitor& visitor) override;
 
