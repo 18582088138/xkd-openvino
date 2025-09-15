@@ -43,13 +43,19 @@ if(NOT BUILD_SHARED_LIBS)
     target_compile_definitions(${TARGET_NAME} PUBLIC OPENVINO_STATIC_LIBRARY)
 endif()
 
+find_package(Eigen3 REQUIRED NO_MODULE)
+message(STATUS "EIGEN3 include dir: ${EIGEN3_INCLUDE_DIR}")
+
 target_include_directories(${TARGET_NAME} PUBLIC
     $<BUILD_INTERFACE:${REF_IMPL_INCLUDE_DIR}>
     $<BUILD_INTERFACE:${OV_CORE_DEV_API_PATH}>
     $<BUILD_INTERFACE:${OV_CORE_INCLUDE_PATH}>)
 
+target_include_directories(${TARGET_NAME} INTERFACE ${EIGEN3_INCLUDE_DIR})
+
 find_package(Threads REQUIRED)
-target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads openvino::core::dev)
+
+target_link_libraries(${TARGET_NAME} PRIVATE Threads::Threads openvino::core::dev Eigen3::Eigen)
 
 ov_add_clang_format_target(${TARGET_NAME}_clang FOR_TARGETS ${TARGET_NAME})
 
