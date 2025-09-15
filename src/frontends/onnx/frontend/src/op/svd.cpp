@@ -19,12 +19,12 @@ ov::OutputVector svd(const ov::frontend::onnx::Node& node) {
     auto ng_inputs = node.get_ov_inputs();
     auto H  = ng_inputs[0];
 
-    auto svd_node = std::make_shared<ov::op::v0::GatherOperation>(H);
+    auto svd_node = std::make_shared<ov::op::v0::SVD>(H);
 
     return {svd_node->outputs()};
 }
 
-ONNX_OP("GatherOperation", OPSET_RANGE(1, 5), ai_onnx::opset_1::svd);
+ONNX_OP("SVD", OPSET_RANGE(1, 5), ai_onnx::opset_1::svd);
 }  // namespace opset_1
 
 

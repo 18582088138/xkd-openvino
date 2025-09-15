@@ -58,7 +58,7 @@ void SVD_Infer(const T* const H,
             size_t batch,
             size_t m,
             size_t n){
-    const float* data = H;
+    const T* const data = H;
 
     size_t in_mat_size = m * n;
     size_t u_mat_size = m * m;
@@ -66,24 +66,54 @@ void SVD_Infer(const T* const H,
     size_t v_mat_size = n * n;
     
     for (size_t b = 0; b < batch; ++b) {
-        const float* batch_data = data + b * in_mat_size;
-        Eigen::Map<const Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>> A(batch_data, m, n);
-        
+        const T* batch_data = data + b * in_mat_size;
+
+        // --- FIX: Convert T* input to Eigen::MatrixXf ---
+        // Create a temporary float matrix and copy/convert data
+        Eigen::MatrixXf A_f(m, n);
+        for (size_t i = 0; i < m; ++i) {
+            for (size_t j = 0; j < n; ++j) {
+                // Assuming row-major input layout for H
+                A_f(i, j) = static_cast<float>(batch_data[i * n + j]);
+            }
+        }
+        // Eigen::Map approach removed due to type mismatch T vs float
+
         // Use Eigen's BDCSVD for better numerical stability (similar to LAPACK)
-        Eigen::BDCSVD<Eigen::MatrixXf> svd(A, Eigen::ComputeFullU | Eigen::ComputeFullV);
-        
-        // Get SVD results
-        Eigen::MatrixXf U = svd.matrixU();
-        Eigen::VectorXf S = svd.singularValues();
-        Eigen::MatrixXf V = svd.matrixV();
-        
+        // Compute types should match the output requirements (Full matrices)
+        Eigen::BDCSVD<Eigen::MatrixXf> svd(A_f, Eigen::ComputeFullU | Eigen::ComputeFullV);
+
+        // Get SVD results (as float)
+        Eigen::MatrixXf U_f = svd.matrixU();
+        Eigen::VectorXf S_f = svd.singularValues();
+        Eigen::MatrixXf V_f = svd.matrixV();
+
         // Ensure proper signs and ordering (similar to PyTorch)
-        ensure_svd_signs(U, S, V);
-        
-        // Write outputs
-        Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(U_output + b * u_mat_size, m, m) = U;
-        Eigen::Map<Eigen::VectorXf>(S_output + b * s_vec_size, s_vec_size) = S;
-        Eigen::Map<Eigen::Matrix<float, Eigen::Dynamic, Eigen::Dynamic, Eigen::RowMajor>>(V_output + b * v_mat_size, n, n) = V;
+        ensure_svd_signs(U_f, S_f, V_f);
+
+        // --- FIX: Convert float results back to T* output ---
+        // Write U
+        T* current_U_output = U_output + b * u_mat_size;
+        for (size_t i = 0; i < m; ++i) {
+            for (size_t j = 0; j < m; ++j) {
+                current_U_output[i * m + j] = static_cast<T>(U_f(i, j));
+            }
+        }
+
+        // Write S
+        T* current_S_output = S_output + b * s_vec_size;
+        for (size_t i = 0; i < s_vec_size; ++i) {
+             current_S_output[i] = static_cast<T>(S_f(i));
+        }
+
+        // Write V
+        T* current_V_output = V_output + b * v_mat_size;
+        for (size_t i = 0; i < n; ++i) {
+            for (size_t j = 0; j < n; ++j) {
+                current_V_output[i * n + j] = static_cast<T>(V_f(i, j));
+            }
+        }
+        // Eigen::Map approach removed for output due to type mismatch T vs float
     }
 
 }

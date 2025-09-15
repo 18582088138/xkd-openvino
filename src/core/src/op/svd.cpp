@@ -60,7 +60,7 @@ void SVD::validate_and_infer_types() {
     const auto& svd_shape = get_input_partial_shape(0);
 
     NODE_VALIDATION_CHECK(this,
-        H_shape.rank().is_static() && H_shape.rank() == 3,
+        svd_shape.rank().is_static() && svd_shape.rank() == 3,
         "Features input must be 3D: [B, X, Y]");
 
     auto rank = svd_shape.rank().is_static() ? svd_shape.rank().get_length() : 0;
@@ -105,9 +105,13 @@ bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
     auto& S_output = outputs[1];
     auto& V_output = outputs[2];
 
-    const auto& h_shape = H.get_shape();
+    std::cout << "[DEBUG] SVD::Evaluate::visit" << std::endl;
+    std::cout << "[DEBUG] H.get_element_type(): " << H.get_element_type() << std::endl;
+    std::cout << "[DEBUG] H.get_shape(): " << H.get_shape() << std::endl;
 
-    auto rank = h_shape.rank().is_static() ? h_shape.rank().get_length() : 0;
+    const auto& h_shape = H.get_shape();
+    auto rank = h_shape.size();
+    
     if (rank < 2) {
         throw std::runtime_error("CustomSVD input must have at least 2 dimensions (batch..., M, N)");
     }
@@ -130,7 +134,8 @@ bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
     // Dispatch to reference implementation
     using namespace element;
     return IF_TYPE_OF(v0_SVD_evaluate,
-                      OV_PP_ET_LIST(f32, f16, i32, i64),
+                    //   OV_PP_ET_LIST(f32, f16, i32, i64),
+                      OV_PP_ET_LIST(f32, f16),
                       svd::Evaluate,
                       H.get_element_type(),
                       H,
@@ -144,8 +149,8 @@ bool SVD::has_evaluate() const {
     switch (get_input_element_type(0)) {
     case element::f32:
     case element::f16:
-    case element::i32:
-    case element::i64:
+    // case element::i32:
+    // case element::i64:
         return true;
     default:
         return false;

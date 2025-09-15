@@ -22,10 +22,11 @@ std::vector<layout> svd_inst::calc_output_layouts(const svd_node& /*node*/, cons
     const auto H_ps = H_layout.get_partial_shape(); // (B, M, N)
 
     ov::PartialShape U_output_shape = {H_ps[0], H_ps[1], H_ps[1]};
-    ov::PartialShape S_output_shape = {H_ps[0], ov::PartialShape::dynamic()};
+    ov::PartialShape S_output_shape = {H_ps[0], H_ps[1]};
+
     ov::PartialShape V_output_shape = {H_ps[0], H_ps[2], H_ps[2]};
 
-    format U_output_format = format::adjust_to_rank(H_layout.format, U_output_shape.size());
+    format U_format = format::adjust_to_rank(H_layout.format, U_output_shape.size());
     layout U_layout{U_output_shape, output_type, U_format};
 
     format S_format = format::adjust_to_rank(H_layout.format, S_output_shape.size()); // Rank 2
