@@ -26,8 +26,12 @@ protected:
         return jit_constants;
     }
 
-    [[nodiscard]] Arguments get_arguments_desc(const RuntimeParams& /*params*/) const override {
+    [[nodiscard]] Arguments get_arguments_desc(const RuntimeParams& params) const override {
         Arguments args;
+        if (params.is_dynamic()) {
+            std::cout<< "[OV debug]gather_operation is_dynamic" <<std::endl;
+            args.push_back({ArgumentDescriptor::Types::SHAPE_INFO, 0});
+        }
         // Input 0: features  (B, C, N) - FLOAT
         args.push_back({ArgumentDescriptor::Types::INPUT, 0});
         // Input 1: idx (B, NPOINT) - INT32
@@ -61,7 +65,7 @@ protected:
             std::cout << "[OV get_dispatch_data_func] : " << " total= " << total << " lws_x= " << lws_x << std::endl;
 
             wgs.global = {total, 1, 1};
-            // wgs.local = {lws_x, 1, 1};
+            wgs.local = {lws_x, 1, 1};
         }};
     }
 };

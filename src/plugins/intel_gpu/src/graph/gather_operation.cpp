@@ -23,7 +23,7 @@ std::vector<layout> gather_operation_inst::calc_output_layouts(const gather_oper
     const auto features_ps = features_layout.get_partial_shape(); // (B, C, N)
     const auto idx_ps = idx_layout.get_partial_shape();           // (B, NPOINT)
 
-    ov::PartialShape output_shape = {features_ps[0], idx_ps[1]};
+    ov::PartialShape output_shape = {features_ps[0], features_ps[1], idx_ps[1]};
 
     format output_format = format::adjust_to_rank(features_layout.format, output_shape.size());
     return {layout{output_shape, output_type, output_format}};
