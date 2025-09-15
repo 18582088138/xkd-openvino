@@ -32,6 +32,18 @@ struct GatherOperationRef : public GatherOperationBase {
         const auto& idx_layout = node.get_input_layout(1);       //  idx (B, npoint）
         const auto& out_layout = node.get_output_layout(0);      // output (B, C, npoint)
 
+        // std::cout << "[DEBUG] ov GatherOperationRef" << std::endl;
+
+        // std::cout << "[DEBUG] ov features_layout.format = " << features_layout.format << std::endl;
+        // std::cout << "[DEBUG] ov idx_layout.format = " << idx_layout.format << std::endl;
+        // std::cout << "[DEBUG] ov out_layout.format = " << out_layout.format << std::endl;
+
+        // std::cout << "[DEBUG] =======================" << std::endl;
+
+        // std::cout << "[DEBUG] ov features_layout.data_type = " << features_layout.data_type << std::endl;
+        // std::cout << "[DEBUG] ov idx_layout.data_type = " << idx_layout.data_type << std::endl;
+        // std::cout << "[DEBUG] ov out_layout.data_type = " << out_layout.data_type << std::endl;
+
         if (!one_of(features_layout.format, supported_fmts) || !one_of(out_layout.format, supported_fmts)) {
             return false;
         }

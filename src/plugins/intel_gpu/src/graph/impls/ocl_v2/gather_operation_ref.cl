@@ -15,27 +15,31 @@ KERNEL(gather_operation_ref)(
     int C = INPUT0_FEATURE_NUM;
     int N = INPUT0_SIZE_Y;
     int NPOINT = INPUT1_FEATURE_NUM;
+    
+    printf("[OV GPU] B=%d, C=%d, N=%d, NPOINT=%d \n", B, C, N, NPOINT);
 
     int total = B * C * NPOINT;
     if (gid >= total) return;
 
-    int j = gid % NPOINT;                 // point index within npoints
-    int l = (gid / NPOINT) % C;           // channel index
-    int i = gid / (C * NPOINT);           // batch index
+    // int j = gid % NPOINT;                 // point index within npoints
+    // int l = (gid / NPOINT) % C;           // channel index
+    // int i = gid / (C * NPOINT);           // batch index
 
-    int a = idx[i * NPOINT + j];          // gather index from input idx
+    // printf("[OV GPU] j=%d, l=%d, i=%d \n", j, l, i);
 
-    float out_val = 0.0f;
-    if (a >= 0 && a < N) {
-		int input_offset = i * (C * N) + l * N + a;
-        float in_val = features[input_offset];
-        // Minimal sanitization
-        if (isnan(in_val) || isinf(in_val)) {
-			out_val = 0.0f;
-		} else {
-			out_val = in_val;
-		}
-    }
+    // int a = idx[i * NPOINT + j];          // gather index from input idx
 
-    output[i * (C * NPOINT) + l * NPOINT + j] = out_val;
+    // float out_val = 0.0f;
+    // if (a >= 0 && a < N) {
+		// int input_offset = i * (C * N) + l * N + a;
+    //     float in_val = features[input_offset];
+    //     // Minimal sanitization
+    //     if (isnan(in_val) || isinf(in_val)) {
+		// 	out_val = 0.0f;
+		// } else {
+		// 	out_val = in_val;
+		// }
+    // }
+
+    // output[i * (C * NPOINT) + l * NPOINT + j] = out_val;
 }

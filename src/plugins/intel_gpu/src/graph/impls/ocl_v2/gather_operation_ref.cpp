@@ -39,26 +39,29 @@ protected:
 
     [[nodiscard]] DispatchDataFunc get_dispatch_data_func() const override {
         return DispatchDataFunc{[](const RuntimeParams& params, KernelData& kd, ImplRuntimeParams* /*rt_params*/) {
-        assert(!params.is_dynamic());
-        auto& wgs = kd.params.workGroups;
+            assert(!params.is_dynamic());
+            auto& wgs = kd.params.workGroups;
 
-        // Output shape: [B, C, NPOINT]
-        const auto& out_shape = params.output_layouts[0].get_shape();
-        const size_t B      = out_shape.size() > 0 ? static_cast<size_t>(out_shape[0]) : 1;
-        const size_t C      = out_shape.size() > 1 ? static_cast<size_t>(out_shape[1]) : 1;
-        const size_t NPOINT = out_shape.size() > 2 ? static_cast<size_t>(out_shape[2]) : 1;
+            // Output shape: [B, C, NPOINT]
+            const auto& out_shape = params.output_layouts[0].get_shape();
+            const size_t B = out_shape.size() > 0 ? static_cast<size_t>(out_shape[0]) : 1;
+            const size_t C = out_shape.size() > 1 ? static_cast<size_t>(out_shape[1]) : 1;
+            const size_t NPOINT = out_shape.size() > 2 ? static_cast<size_t>(out_shape[2]) : 1;
 
-        const size_t total = B * C * NPOINT;
-        // Choose LWS as a divisor of total, capped by device limit
-        size_t max_wgs = params.get_device_info().max_work_group_size;
-        size_t lws_x = std::min(static_cast<size_t>(256), max_wgs);
-        while (lws_x > 1 && (total % lws_x) != 0) {
-            lws_x >>= 1;
-        }
-        if (lws_x == 0) lws_x = 1;
+            const size_t total = B * C * NPOINT;
+            // Choose LWS as a divisor of total, capped by device limit
+            size_t max_wgs = params.get_device_info().max_work_group_size;
+            size_t lws_x = std::min(static_cast<size_t>(256), max_wgs);
+            while (lws_x > 1 && (total % lws_x) != 0) {
+                lws_x >>= 1;
+            }
+            if (lws_x == 0)
+                lws_x = 1;
 
-        wgs.global = { total, 1, 1 };
-        wgs.local  = { lws_x, 1, 1 };
+            std::cout << "[OV get_dispatch_data_func] : " << " total= " << total << " lws_x= " << lws_x << std::endl;
+
+            wgs.global = {total, 1, 1};
+            // wgs.local = {lws_x, 1, 1};
         }};
     }
 };
@@ -66,11 +69,11 @@ protected:
 class GatherOperationRefImpl : public PrimitiveImplOCL {
 public:
     DECLARE_OBJECT_TYPE_SERIALIZATION(ov::intel_gpu::ocl::GatherOperationRefImpl)
-    Stage::Ptr grouping_stage = make_stage<GatherOperationGeneratorRef>();
+    Stage::Ptr gather_stage = make_stage<GatherOperationGeneratorRef>();
 
     GatherOperationRefImpl() : PrimitiveImplOCL(GatherOperationRef::get_type_info_static()) {}
     GatherOperationRefImpl(const program_node& /*node*/, const RuntimeParams& params) : GatherOperationRefImpl() {
-        add_stage(grouping_stage, params);
+        add_stage(gather_stage, params);
     }
 
     [[nodiscard]] std::unique_ptr<primitive_impl> clone() const override {
@@ -84,6 +87,7 @@ public:
 }  // namespace
 
 std::unique_ptr<primitive_impl> GatherOperationRef::create_impl(const program_node& node, const RuntimeParams& params) const {
+    std::cout << "[DEBUG] Creating GATHER_OPERATION_REF_IMPL" << std::endl;
     assert(node.get_dependencies().size() == 2);  // features, idx
     assert(node.get_outputs_count() == 1);        // output
     return std::make_unique<GatherOperationRefImpl>(node, params);
