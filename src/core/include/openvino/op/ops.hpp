@@ -214,3 +214,4 @@
 
 #include "openvino/op/grouping_operation.hpp"
 #include "openvino/op/furthest_point_sampling.hpp"
+#include "openvino/op/gather_operation.hpp"

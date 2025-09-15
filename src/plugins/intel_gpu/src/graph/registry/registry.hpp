@@ -168,6 +168,7 @@ REGISTER_IMPLS(col2im);
 REGISTER_IMPLS(vl_sdpa);
 REGISTER_IMPLS(grouping_operation);
 REGISTER_IMPLS(furthest_point_sampling);
+REGISTER_IMPLS(gather_operation);
 
 REGISTER_DEFAULT_IMPLS(assign, CPU_S, CPU_D);
 REGISTER_DEFAULT_IMPLS(read_value, CPU_S, CPU_D);

@@ -70,6 +70,7 @@ class Unsqueeze;
 class Xor;
 class GroupingOperation;
 class FurthestPointSampling;
+class GatherOperation;
 }  // namespace ov::op::v0
 
 namespace ov::op::v1 {

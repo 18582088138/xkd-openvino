@@ -67,6 +67,7 @@ REGISTER_FACTORY(v0, Tile);
 REGISTER_FACTORY(v0, Unsqueeze);
 REGISTER_FACTORY(v0, GroupingOperation);
 REGISTER_FACTORY(v0, FurthestPointSampling);
+REGISTER_FACTORY(v0, GatherOperation);
 
 // ----------------------------- Unsupported v0 ops ----------------------------- //
 // Deprecated ops
