@@ -30,12 +30,8 @@ class typed_primitive_inst<svd> : public typed_primitive_inst_base<svd> {
 
 public:
     template<typename ShapeType>
-    // static std::vector<layout> calc_output_layouts(GroupingOperation_node const& /*node*/, const kernel_impl_params& impl_param) {
-    //     return forward_input0_shape<ShapeType>(impl_param);
-    // }
-    // static layout calc_output_layout(GroupingOperation_node const& node, kernel_impl_params const& impl_param);
-
     static std::vector<layout> calc_output_layouts(const svd_node& /*node*/, const kernel_impl_params& impl_params);
+    // static layout calc_output_layout(const svd_node& node, const kernel_impl_params& impl_params);
     static layout calc_output_layout(const svd_node& node, const kernel_impl_params& impl_params) {
         return calc_output_layouts<ov::PartialShape>(node, impl_params)[0];
     }

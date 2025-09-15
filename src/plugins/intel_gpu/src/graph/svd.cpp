@@ -23,7 +23,6 @@ std::vector<layout> svd_inst::calc_output_layouts(const svd_node& /*node*/, cons
 
     ov::PartialShape U_output_shape = {H_ps[0], H_ps[1], H_ps[1]};
     ov::PartialShape S_output_shape = {H_ps[0], H_ps[1]};
-
     ov::PartialShape V_output_shape = {H_ps[0], H_ps[2], H_ps[2]};
 
     format U_format = format::adjust_to_rank(H_layout.format, U_output_shape.size());
@@ -36,6 +35,7 @@ std::vector<layout> svd_inst::calc_output_layouts(const svd_node& /*node*/, cons
     layout V_layout{V_output_shape, output_type, V_format};
 
     return {U_layout, S_layout, V_layout};
+    // return {U_layout, V_layout};
 }
 
 std::string svd_inst::to_string(const svd_node& node) {

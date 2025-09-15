@@ -26,8 +26,11 @@ protected:
         return jit_constants;
     }
 
-    [[nodiscard]] Arguments get_arguments_desc(const RuntimeParams& /*params*/) const override {
+    [[nodiscard]] Arguments get_arguments_desc(const RuntimeParams& params) const override {
         Arguments args;
+        if (params.is_dynamic()) {
+            args.push_back({ArgumentDescriptor::Types::SHAPE_INFO, 0});
+        }
         // Input 0: H (B, M, N) - FLOAT
         args.push_back({ArgumentDescriptor::Types::INPUT, 0});
 
@@ -127,8 +130,8 @@ public:
 }  // namespace
 
 std::unique_ptr<primitive_impl> SVDRef::create_impl(const program_node& node, const RuntimeParams& params) const {
-    assert(node.get_dependencies().size() == 1);  // H
-    assert(node.get_outputs_count() == 3);        // U, S, V
+    assert(node.get_dependencies().size() == 1);   // H
+    assert(node.get_outputs_count() == 3);      // U, S, V
     return std::make_unique<SVDRefImpl>(node, params);
 }
 

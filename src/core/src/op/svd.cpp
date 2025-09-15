@@ -30,7 +30,7 @@ struct Evaluate : element::NoAction<bool> {
             V_output.data<T>(),
             H.get_shape()[0],  // b
             H.get_shape()[1],  // m
-            H.get_shape()[2]  // n
+            H.get_shape()[2]   // n
         );
         return true;
     }
@@ -63,7 +63,7 @@ void SVD::validate_and_infer_types() {
         svd_shape.rank().is_static() && svd_shape.rank() == 3,
         "Features input must be 3D: [B, X, Y]");
 
-    auto rank = svd_shape.rank().is_static() ? svd_shape.rank().get_length() : 0;
+    size_t rank = svd_shape.rank().is_static() ? svd_shape.rank().get_length() : 0;
     if (rank < 2) {
         throw std::runtime_error("CustomSVD input must have at least 2 dimensions (batch..., M, N)");
     }
@@ -105,9 +105,9 @@ bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
     auto& S_output = outputs[1];
     auto& V_output = outputs[2];
 
-    std::cout << "[DEBUG] SVD::Evaluate::visit" << std::endl;
-    std::cout << "[DEBUG] H.get_element_type(): " << H.get_element_type() << std::endl;
-    std::cout << "[DEBUG] H.get_shape(): " << H.get_shape() << std::endl;
+    // std::cout << "[DEBUG] SVD::Evaluate::visit" << std::endl;
+    // std::cout << "[DEBUG] H.get_element_type(): " << H.get_element_type() << std::endl;
+    // std::cout << "[DEBUG] H.get_shape(): " << H.get_shape() << std::endl;
 
     const auto& h_shape = H.get_shape();
     auto rank = h_shape.size();
