@@ -10,8 +10,8 @@
 using namespace cldnn;  // TODO: Remove once namespaces are aligned
 namespace ov::intel_gpu::ocl {
 
-struct SVDBase : public ImplementationManager {
-    explicit SVDBase(shape_types shape_type, ValidateFunc vf = nullptr) : ImplementationManager(impl_types::ocl, shape_type, std::move(vf)) {}
+struct CustomSVDBase : public ImplementationManager {
+    explicit CustomSVDBase(shape_types shape_type, ValidateFunc vf = nullptr) : ImplementationManager(impl_types::ocl, shape_type, std::move(vf)) {}
     [[nodiscard]] in_out_fmts_t query_formats(const program_node& node) const override {
         size_t input_count = node.get_dependencies().size();
         size_t output_count = node.get_outputs_count();

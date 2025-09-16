@@ -7,16 +7,16 @@
 #include <memory>
 #include <utility>
 
-#include "svd_base.hpp"
+#include "custom_svd_base.hpp"
 #include "program_node.h"
 #include "registry/implementation_manager.hpp"
 
 using namespace cldnn;  // TODO: Remove once namespaces are aligned
 namespace ov::intel_gpu::ocl {
 
-struct SVDRef : public SVDBase {
-    OV_GPU_PRIMITIVE_IMPL("ocl::svd::ref")
-    explicit SVDRef(shape_types shape_type, ValidateFunc vf = nullptr) : SVDBase(shape_type, std::move(vf)) {}
+struct CustomSVDRef : public CustomSVDBase {
+    OV_GPU_PRIMITIVE_IMPL("ocl::custom_svd::ref")
+    explicit CustomSVDRef(shape_types shape_type, ValidateFunc vf = nullptr) : CustomSVDBase(shape_type, std::move(vf)) {}
     std::unique_ptr<primitive_impl> create_impl(const program_node& node, const RuntimeParams& params) const override;
     [[nodiscard]] bool validate_impl(const program_node& node) const override {
         static constexpr std::array supported_fmts = {format::bfyx, format::bfzyx};

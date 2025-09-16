@@ -2,17 +2,17 @@
 // SPDX-License-Identifier: Apache-2.0
 //
 
-#include "openvino/op/svd.hpp"
+#include "openvino/op/custom_svd.hpp"
 #include "itt.hpp"
 #include "openvino/op/constant.hpp"
 #include "openvino/core/except.hpp"
 #include "generate_proposals_shape_inference.hpp"
-#include "openvino/reference/svd.hpp"
+#include "openvino/reference/custom_svd.hpp"
 
 namespace ov {
 namespace op {
 
-namespace svd {
+namespace custom_svd {
 
 struct Evaluate : element::NoAction<bool> {
     using element::NoAction<bool>::visit;
@@ -23,7 +23,7 @@ struct Evaluate : element::NoAction<bool> {
                              Tensor& S_output,
                              Tensor& V_output) {
         using T = typename element_type_traits<ET>::value_type;        
-        reference::SVD_Infer<T>(
+        reference::CustomSVD_Infer<T>(
             H.data<const T>(),
             U_output.data<T>(),
             S_output.data<T>(),
@@ -35,28 +35,28 @@ struct Evaluate : element::NoAction<bool> {
         return true;
     }
 };
-}  // namespace svd
+}  // namespace custom_svd
 
 
 namespace v0 {
 
-SVD::SVD(const Output<Node>& H)
+CustomSVD::CustomSVD(const Output<Node>& H)
     : Op({H}) {
     constructor_validate_and_infer_types();
 }
 
-bool SVD::visit_attributes(AttributeVisitor& visitor) {
-    OV_OP_SCOPE(v0_SVD_visit_attributes);
+bool CustomSVD::visit_attributes(AttributeVisitor& visitor) {
+    OV_OP_SCOPE(v0_CustomSVD_visit_attributes);
     return true;
 }
 
-std::shared_ptr<Node> SVD::clone_with_new_inputs(const OutputVector& new_args) const {
-    OV_OP_SCOPE(v0_SVD_clone_with_new_inputs);
+std::shared_ptr<Node> CustomSVD::clone_with_new_inputs(const OutputVector& new_args) const {
+    OV_OP_SCOPE(v0_CustomSVD_clone_with_new_inputs);
     check_new_args_count(this, new_args);
-    return std::make_shared<SVD>(new_args.at(0));
+    return std::make_shared<CustomSVD>(new_args.at(0));
 }
 
-void SVD::validate_and_infer_types() {
+void CustomSVD::validate_and_infer_types() {
     const auto& svd_shape = get_input_partial_shape(0);
 
     NODE_VALIDATION_CHECK(this,
@@ -91,8 +91,8 @@ void SVD::validate_and_infer_types() {
 }
 
 
-bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
-    OV_OP_SCOPE(v0_SVD_evaluate);
+bool CustomSVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
+    OV_OP_SCOPE(v0_CustomSVD_evaluate);
     OPENVINO_ASSERT(inputs.size() == 1 && outputs.size() == 3);
 
     const auto& input_pshape = get_input_partial_shape(0);
@@ -105,7 +105,7 @@ bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
     auto& S_output = outputs[1];
     auto& V_output = outputs[2];
 
-    // std::cout << "[DEBUG] SVD::Evaluate::visit" << std::endl;
+    // std::cout << "[DEBUG] CustomSVD::Evaluate::visit" << std::endl;
     // std::cout << "[DEBUG] H.get_element_type(): " << H.get_element_type() << std::endl;
     // std::cout << "[DEBUG] H.get_shape(): " << H.get_shape() << std::endl;
 
@@ -133,10 +133,10 @@ bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
 
     // Dispatch to reference implementation
     using namespace element;
-    return IF_TYPE_OF(v0_SVD_evaluate,
+    return IF_TYPE_OF(v0_CustomSVD_evaluate,
                     //   OV_PP_ET_LIST(f32, f16, i32, i64),
                       OV_PP_ET_LIST(f32, f16),
-                      svd::Evaluate,
+                      custom_svd::Evaluate,
                       H.get_element_type(),
                       H,
                       U_output,
@@ -144,8 +144,8 @@ bool SVD::evaluate(TensorVector& outputs, const TensorVector& inputs) const {
                       V_output);
 }
 
-bool SVD::has_evaluate() const {
-    OV_OP_SCOPE(v0_SVD_has_evaluate);
+bool CustomSVD::has_evaluate() const {
+    OV_OP_SCOPE(v0_CustomSVD_has_evaluate);
     switch (get_input_element_type(0)) {
     case element::f32:
     case element::f16:

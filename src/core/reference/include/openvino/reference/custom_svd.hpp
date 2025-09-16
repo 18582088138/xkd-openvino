@@ -15,7 +15,7 @@ namespace ov {
 namespace reference {
 
 template <typename T>
-void SVD_Infer(const T* H, T* U_output, T* S_output, T* V_output,
+void CustomSVD_Infer(const T* H, T* U_output, T* S_output, T* V_output,
                const int64_t batch, const int64_t m, const int64_t n) {
     // Use the smaller dimension for U/V size calculation to match thin SVD
     const int64_t k = std::min(m, n);
@@ -38,7 +38,7 @@ void SVD_Infer(const T* H, T* U_output, T* S_output, T* V_output,
         // This matches torch.svd(some=True) default behavior
         Eigen::BDCSVD<Eigen::MatrixXf> svd(A_f, Eigen::ComputeThinU | Eigen::ComputeThinV);
 
-        // Get SVD results (as float)
+        // Get CustomSVD results (as float)
         Eigen::MatrixXf U_f = svd.matrixU();    // Shape: [m, k]
         Eigen::VectorXf S_f = svd.singularValues(); // Shape: [k]
         Eigen::MatrixXf V_f = svd.matrixV();    // Shape: [n, k] - This is the V matrix itself

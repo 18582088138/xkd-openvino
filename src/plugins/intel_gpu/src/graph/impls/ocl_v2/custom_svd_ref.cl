@@ -4,7 +4,7 @@
 #include "include/batch_headers/common.cl"
 #include "include/batch_headers/fetch_data.cl"
 
-KERNEL(svd_ref)(OPTIONAL_SHAPE_INFO_ARG
+KERNEL(custom_svd_ref)(OPTIONAL_SHAPE_INFO_ARG
     const __global INPUT0_TYPE* input,
     __global OUTPUT_TYPE* U,            // (B, M, M)
     __global OUTPUT_TYPE* S,            // (B, min(M,N))
@@ -22,7 +22,7 @@ KERNEL(svd_ref)(OPTIONAL_SHAPE_INFO_ARG
     uint s_offset = batch_index * ((m < n) ? m : n);
     uint v_offset = batch_index * n * n;
     
-    // For 3x3 matrices, use a simplified SVD approach
+    // For 3x3 matrices, use a simplified CustomSVD approach
     if (m == 3 && n == 3) {
         // Load input matrix
         float a00 = input[input_offset + 0], a01 = input[input_offset + 1], a02 = input[input_offset + 2];

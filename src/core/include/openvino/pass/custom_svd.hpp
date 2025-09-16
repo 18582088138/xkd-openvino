@@ -12,9 +12,9 @@ namespace pass {
  * @brief The transformation to support torch.svd
  * \ingroup ov_pass_cpp_api
  */
-class OPENVINO_API SVD : public ModelPass {
+class OPENVINO_API CustomSVD : public ModelPass {
 public:
-    OPENVINO_MODEL_PASS_RTTI("SVD");
+    OPENVINO_MODEL_PASS_RTTI("CustomSVD");
 
     bool run_on_model(const std::shared_ptr<ov::Model>& model) override;
 };

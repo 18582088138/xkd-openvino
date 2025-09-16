@@ -9,18 +9,18 @@
 
 namespace cldnn {
 
-/// @brief svd primitive for CLDNN
-/// This primitive corresponds to the OpenVINO TemplateExtension::SVD Op.
-struct svd : public primitive_base<svd> {
-    CLDNN_DECLARE_PRIMITIVE(svd);
+/// @brief custom_svd primitive for CLDNN
+/// This primitive corresponds to the OpenVINO TemplateExtension::CustomSVD Op.
+struct custom_svd : public primitive_base<custom_svd> {
+    CLDNN_DECLARE_PRIMITIVE(custom_svd);
 
     /// @brief Default constructor (should generally not be used directly)
-    svd() : primitive_base("", {}) {}
+    custom_svd() : primitive_base("", {}) {}
 
-    /// @brief Constructs svd primitive
+    /// @brief Constructs custom_svd primitive
     /// @param id This primitive id
     /// @param inputs Inputs primitive ids. Expected: {H_input}
-    svd(const primitive_id& id, const input_info& input_H) // Represents the 'H' input
+    custom_svd(const primitive_id& id, const input_info& input_H) // Represents the 'H' input
         : primitive_base(id, {input_H}) {}
 
     size_t hash() const override {
@@ -38,12 +38,12 @@ struct svd : public primitive_base<svd> {
 
     /// @brief Serializes this primitive to a binary buffer
     void save(BinaryOutputBuffer& ob) const override {
-        primitive_base<svd>::save(ob);
+        primitive_base<custom_svd>::save(ob);
     }
 
     /// @brief Deserializes this primitive from a binary buffer
     void load(BinaryInputBuffer& ib) override {
-        primitive_base<svd>::load(ib);
+        primitive_base<custom_svd>::load(ib);
     }
 };
 

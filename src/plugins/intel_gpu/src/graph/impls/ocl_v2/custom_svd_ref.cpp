@@ -1,11 +1,11 @@
 // Copyright (C) 2025 Intel Corporation
 // SPDX-License-Identifier: Apache-2.0
 //
-#include "svd_ref.hpp"
+#include "custom_svd_ref.hpp"
 
 #include "common_utils/jitter.hpp"
-#include "svd_inst.h"
-#include "intel_gpu/primitives/svd.hpp"
+#include "custom_svd_inst.h"
+#include "intel_gpu/primitives/custom_svd.hpp"
 #include "primitive_inst.h"
 #include "primitive_ocl_base.hpp"
 #include "utils/kernel_generator.hpp"
@@ -16,9 +16,9 @@ namespace {
 
 using namespace ov::intel_gpu::ocl;
 
-class SVDGeneratorRef : public KernelGenerator {
+class CustomSVDGeneratorRef : public KernelGenerator {
 public:
-    SVDGeneratorRef() : KernelGenerator("svd_ref") {}
+    CustomSVDGeneratorRef() : KernelGenerator("custom_svd_ref") {}
 
 protected:
     [[nodiscard]] JitConstants get_jit_constants(const RuntimeParams& params) const override {
@@ -108,34 +108,34 @@ protected:
     }
 };
 
-class SVDRefImpl : public PrimitiveImplOCL {
+class CustomSVDRefImpl : public PrimitiveImplOCL {
 public:
-    DECLARE_OBJECT_TYPE_SERIALIZATION(ov::intel_gpu::ocl::SVDRefImpl)
-    Stage::Ptr grouping_stage = make_stage<SVDGeneratorRef>();
+    DECLARE_OBJECT_TYPE_SERIALIZATION(ov::intel_gpu::ocl::CustomSVDRefImpl)
+    Stage::Ptr grouping_stage = make_stage<CustomSVDGeneratorRef>();
 
-    SVDRefImpl() : PrimitiveImplOCL(SVDRef::get_type_info_static()) {}
-    SVDRefImpl(const program_node& /*node*/, const RuntimeParams& params) : SVDRefImpl() {
+    CustomSVDRefImpl() : PrimitiveImplOCL(CustomSVDRef::get_type_info_static()) {}
+    CustomSVDRefImpl(const program_node& /*node*/, const RuntimeParams& params) : CustomSVDRefImpl() {
         add_stage(grouping_stage, params);
     }
 
     [[nodiscard]] std::unique_ptr<primitive_impl> clone() const override {
-        return make_deep_copy<SVDRefImpl>(this);
+        return make_deep_copy<CustomSVDRefImpl>(this);
     }
 
     // --- internal buffer descs (if need) ---
-    // SVD does not require additional internal buffers to store intermediate statistics
+    // CustomSVD does not require additional internal buffers to store intermediate statistics
     // [[nodiscard]] std::vector<BufferDescriptor> get_internal_buffer_descs(const RuntimeParams& params) const override {}
 };
 
 }  // namespace
 
-std::unique_ptr<primitive_impl> SVDRef::create_impl(const program_node& node, const RuntimeParams& params) const {
+std::unique_ptr<primitive_impl> CustomSVDRef::create_impl(const program_node& node, const RuntimeParams& params) const {
     assert(node.get_dependencies().size() == 1);   // H
     assert(node.get_outputs_count() == 3);      // U, S, V
-    return std::make_unique<SVDRefImpl>(node, params);
+    return std::make_unique<CustomSVDRefImpl>(node, params);
 }
 
 }  // namespace ov::intel_gpu::ocl
 
-// BIND_BINARY_BUFFER_WITH_TYPE(cldnn::svd)
-BIND_BINARY_BUFFER_WITH_TYPE(ov::intel_gpu::ocl::SVDRefImpl)
+// BIND_BINARY_BUFFER_WITH_TYPE(cldnn::custom_svd)
+BIND_BINARY_BUFFER_WITH_TYPE(ov::intel_gpu::ocl::CustomSVDRefImpl)

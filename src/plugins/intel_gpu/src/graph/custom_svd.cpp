@@ -3,15 +3,15 @@
 //
 
 #include "json_object.h"
-#include "svd_inst.h"
+#include "custom_svd_inst.h"
 #include "primitive_type_base.h"
 
 namespace cldnn {
-GPU_DEFINE_PRIMITIVE_TYPE_ID(svd);
+GPU_DEFINE_PRIMITIVE_TYPE_ID(custom_svd);
 
 template <typename ShapeType>
-std::vector<layout> svd_inst::calc_output_layouts(const svd_node& /*node*/, const kernel_impl_params& impl_param) {
-    auto desc = impl_param.typed_desc<svd>();
+std::vector<layout> custom_svd_inst::calc_output_layouts(const custom_svd_node& /*node*/, const kernel_impl_params& impl_param) {
+    auto desc = impl_param.typed_desc<custom_svd>();
     auto H_layout = impl_param.get_input_layout(0); // (B, M, N)
     auto output_type = H_layout.data_type;
 
@@ -38,7 +38,7 @@ std::vector<layout> svd_inst::calc_output_layouts(const svd_node& /*node*/, cons
     // return {U_layout, V_layout};
 }
 
-std::string svd_inst::to_string(const svd_node& node) {
+std::string custom_svd_inst::to_string(const custom_svd_node& node) {
     auto desc = node.get_primitive();
     auto node_info = node.desc_to_json();
 
@@ -48,6 +48,6 @@ std::string svd_inst::to_string(const svd_node& node) {
     return primitive_description.str();
 }
 
-svd_inst::typed_primitive_inst(network& network, const svd_node& node) : parent(network, node) {}
+custom_svd_inst::typed_primitive_inst(network& network, const custom_svd_node& node) : parent(network, node) {}
 
 }  // namespace cldnn

@@ -6,13 +6,13 @@ namespace ov {
 namespace op {
 namespace v0 {
 
-class OPENVINO_API SVD : public Op {
+class OPENVINO_API CustomSVD : public Op {
 public:
-    OPENVINO_OP("SVD", "opset1");
+    OPENVINO_OP("CustomSVD", "opset1");
 
-    SVD() = default;
+    CustomSVD() = default;
 
-    SVD(const Output<Node>& H);
+    CustomSVD(const Output<Node>& H);
 
     bool visit_attributes(AttributeVisitor& visitor) override;
 
