@@ -24,8 +24,8 @@ struct FurthestPointSamplingOpt : public FurthestPointSamplingBase {
         static constexpr std::array supported_types = {
             ov::element::f32,
             ov::element::f16,
-            ov::element::i32,
-            ov::element::i64,
+            // ov::element::i32,
+            // ov::element::i64,
         };
 
         static constexpr std::array supported_npoint_types = {ov::element::i32, ov::element::i64};
@@ -42,7 +42,7 @@ struct FurthestPointSamplingOpt : public FurthestPointSamplingBase {
             return false;
         }
 
-        if (!one_of(xyz_layout.data_type, supported_types) || !one_of(out_layout.data_type, supported_types)) {
+        if (!one_of(xyz_layout.data_type, supported_types) || !one_of(out_layout.data_type, supported_npoint_types)) {
             return false;
         }
 

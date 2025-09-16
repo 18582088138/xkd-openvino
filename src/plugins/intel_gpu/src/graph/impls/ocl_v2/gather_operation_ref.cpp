@@ -29,7 +29,7 @@ protected:
     [[nodiscard]] Arguments get_arguments_desc(const RuntimeParams& params) const override {
         Arguments args;
         if (params.is_dynamic()) {
-            std::cout<< "[OV debug]gather_operation is_dynamic" <<std::endl;
+            // std::cout<< "[OV debug]gather_operation is_dynamic" <<std::endl;
             args.push_back({ArgumentDescriptor::Types::SHAPE_INFO, 0});
         }
         // Input 0: features  (B, C, N) - FLOAT
@@ -62,7 +62,7 @@ protected:
             if (lws_x == 0)
                 lws_x = 1;
 
-            std::cout << "[OV get_dispatch_data_func] : " << " total= " << total << " lws_x= " << lws_x << std::endl;
+            // std::cout << "[OV get_dispatch_data_func] : " << " total= " << total << " lws_x= " << lws_x << std::endl;
 
             wgs.global = {total, 1, 1};
             wgs.local = {lws_x, 1, 1};
@@ -91,7 +91,7 @@ public:
 }  // namespace
 
 std::unique_ptr<primitive_impl> GatherOperationRef::create_impl(const program_node& node, const RuntimeParams& params) const {
-    std::cout << "[DEBUG] Creating GATHER_OPERATION_REF_IMPL" << std::endl;
+    // std::cout << "[DEBUG] Creating GATHER_OPERATION_REF_IMPL" << std::endl;
     assert(node.get_dependencies().size() == 2);  // features, idx
     assert(node.get_outputs_count() == 1);        // output
     return std::make_unique<GatherOperationRefImpl>(node, params);

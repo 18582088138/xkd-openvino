@@ -15,10 +15,14 @@ std::vector<layout> furthest_point_sampling_inst::calc_output_layouts(const furt
     auto xyz_layout = impl_param.get_input_layout(0); // (B, N, 3)
     auto npoint_layout = impl_param.get_input_layout(1);      // (npoint)
 
-    auto output_type = ov::element::i32;
+    // auto output_type = ov::element::i32;
     // if (impl_param.has_fused_primitives()) {
     //     output_type = impl_param.get_output_element_type();
     // }
+    auto output_type = npoint_layout.data_type;
+    if (impl_param.has_fused_primitives()) {
+        output_type = impl_param.get_output_element_type();
+    }
 
     const auto xyz_ps = xyz_layout.get_partial_shape(); // [B, N, 3]
     const auto npoint_ps = npoint_layout.get_partial_shape();           // [npoint]

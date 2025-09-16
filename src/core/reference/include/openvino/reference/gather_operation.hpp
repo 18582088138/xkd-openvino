@@ -23,6 +23,7 @@ void GatherOperation_Infer(const T* const features,
     for (size_t t = 0; t < output_total; ++t) {
         out[t] = static_cast<T>(0);
     }
+    // std::cout<<"[OV Debug] GatherOperation: b="<< b << ", c="<<c<<", n="<<n<<", npoint="<< npoint <<std::endl;
 
     // Iterate over batch, channels, and points to gather
     for (size_t batch_index = 0; batch_index < b; ++batch_index) {
