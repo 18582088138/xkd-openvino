@@ -253,6 +253,10 @@ std::vector<cldnn::input_info> ProgramBuilder::GetInputInfo(const std::shared_pt
             continue;
         }
         if (!queryMode) {
+            std::cout << "[OV Debug] prevName : " << prevName << " , " << (primitive_ids.find(prevName) == primitive_ids.end()) << std::endl;
+            for (const auto& pair : primitive_ids) {
+                std::cout << "[OV Debug] Key :" << pair.first << " , Value : " << pair.second << std::endl;
+            }
             if (primitive_ids.find(prevName) == primitive_ids.end()) {
                 OPENVINO_THROW("Input ", prevName, " hasn't been found in primitive_ids map");
             }
