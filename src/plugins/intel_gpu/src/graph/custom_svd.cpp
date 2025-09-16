@@ -34,8 +34,10 @@ std::vector<layout> custom_svd_inst::calc_output_layouts(const custom_svd_node& 
     format V_format = format::adjust_to_rank(H_layout.format, V_output_shape.size()); // Rank 3
     layout V_layout{V_output_shape, output_type, V_format};
 
-    return {U_layout, S_layout, V_layout};
-    // return {U_layout, V_layout};
+    return {layout{U_output_shape, output_type, U_format},
+        layout{S_output_shape, output_type, S_format},
+        layout{V_output_shape, output_type, V_format}
+    };
 }
 
 std::string custom_svd_inst::to_string(const custom_svd_node& node) {

@@ -28,17 +28,18 @@ struct CustomSVDRef : public CustomSVDBase {
 
         // static constexpr std::array supported_idx_types = {ov::element::i32, ov::element::i64};
 
-        const auto& H_layout = node.get_input_layout(0);           // H (B, M, N)
-        const auto& U_out_layout = node.get_output_layout(0);      // Uoutput (B, C, npoint, nsample)
-        // const auto& S_out_layout = node.get_output_layout(1);
-        // const auto& V_out_layout = node.get_output_layout(2);
+        const auto& H_layout = node.get_input_layout(0);       // H (B, M, N)
+        const auto& U_out_layout = node.get_output_layout(0);  // Uoutput (B, C, npoint, nsample)
+        const auto& S_out_layout = node.get_output_layout(1);
+        const auto& V_out_layout = node.get_output_layout(2);
 
-
-        if (!one_of(H_layout.format, supported_fmts) || !one_of(U_out_layout.format, supported_fmts)) {
+        if (!one_of(H_layout.format, supported_fmts) || !one_of(U_out_layout.format, supported_fmts) || !one_of(S_out_layout.format, supported_fmts) ||
+            !one_of(V_out_layout.format, supported_fmts)) {
             return false;
         }
 
-        if (!one_of(H_layout.data_type, supported_types) || !one_of(U_out_layout.data_type, supported_types)) {
+        if (!one_of(H_layout.data_type, supported_types) || !one_of(U_out_layout.data_type, supported_types) ||
+            !one_of(S_out_layout.data_type, supported_types) || !one_of(V_out_layout.data_type, supported_types)) {
             return false;
         }
 
