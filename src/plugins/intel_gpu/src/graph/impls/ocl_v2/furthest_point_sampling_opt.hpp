@@ -42,7 +42,7 @@ struct FurthestPointSamplingOpt : public FurthestPointSamplingBase {
             return false;
         }
 
-        if (!one_of(xyz_layout.data_type, supported_types) || !one_of(out_layout.data_type, supported_fmts)) {
+        if (!one_of(xyz_layout.data_type, supported_types) || !one_of(out_layout.data_type, supported_types)) {
             return false;
         }
 
