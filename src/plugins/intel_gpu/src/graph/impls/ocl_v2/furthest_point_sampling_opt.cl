@@ -67,6 +67,9 @@ KERNEL(grouping_operation_opt)(
             float y2 = current_dataset[k * 3 + 1];
             float z2 = current_dataset[k * 3 + 2];
 
+            float mag = x2 * x2 + y2 * y2 + z2 * z2;
+            if (mag <= 1e-3f) continue;
+
             float d = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
             float d2 = fmin(d, temp[k]);
             temp[k] = d2;
