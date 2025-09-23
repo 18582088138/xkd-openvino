@@ -90,8 +90,8 @@ void FurthestPointSampling::validate_and_infer_types() {
         "xyz input must be 3D: [B, N, 3]");
 
     // [Maybe] We cannot know npoint value at shape-infer time reliably; set dynamic second dim
-    PartialShape output_shape{xyz_shape[0], npoint_shape[0]};
-    // PartialShape output_shape{xyz_shape[0], Dimension::dynamic()};
+    // PartialShape output_shape{xyz_shape[0], npoint_shape[0]};
+    PartialShape output_shape{xyz_shape[0], Dimension::dynamic()};
 
     set_output_type(0, ov::element::i32, output_shape);
 }
