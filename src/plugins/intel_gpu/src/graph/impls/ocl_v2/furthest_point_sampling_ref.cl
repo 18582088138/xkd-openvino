@@ -6,7 +6,7 @@
 #include "include/batch_headers/common.cl"
 #include "include/batch_headers/fetch_data.cl"
 
-KERNEL(grouping_operation_ref)(
+KERNEL(furthest_point_sampling_ref)(
     OPTIONAL_SHAPE_INFO_ARG
     const __global INPUT0_TYPE* xyz,          // (B, N, 3) 
     const __global INPUT1_TYPE* npoint_i,     // (npoint)
@@ -17,7 +17,7 @@ KERNEL(grouping_operation_ref)(
     const int B = INPUT0_BATCH_NUM;                      // batch size
     const int N = INPUT0_FEATURE_NUM;                    // number of points
     const int npoint = INPUT1_BATCH_NUM;                 // number of sampled points (length of input1)
-    // printf("[OV GPU] grouping_operation_ref : B=%d, N=%d, npoint=%d \n",B, N, npoint);
+    // printf("[OV GPU] furthest_point_sampling_ref : B=%d, N=%d, npoint=%d \n",B, N, npoint);
 
     if (global_id >= B) {
         return;
@@ -51,6 +51,9 @@ KERNEL(grouping_operation_ref)(
             float x2 = current_dataset[k * 3 + 0];
             float y2 = current_dataset[k * 3 + 1];
             float z2 = current_dataset[k * 3 + 2];
+
+            float mag = x2 * x2 + y2 * y2 + z2 * z2;
+            if (mag <= 1e-3f) continue;
 
             float d = (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1) + (z2 - z1) * (z2 - z1);
             float d2 = fmin(d, temp[k]);

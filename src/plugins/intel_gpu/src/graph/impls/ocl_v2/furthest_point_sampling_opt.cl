@@ -8,7 +8,7 @@
 #define WORK_GROUP_SIZE 256
 #define MAX_LOCAL_POINTS 8192
 
-KERNEL(grouping_operation_opt)(
+KERNEL(furthest_point_sampling_opt)(
     OPTIONAL_SHAPE_INFO_ARG
     const __global INPUT0_TYPE* xyz,          // (B, N, 3) 
     const __global INPUT1_TYPE* npoint_i,     // (npoint)
